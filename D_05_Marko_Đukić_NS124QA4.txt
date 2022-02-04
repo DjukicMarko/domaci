@@ -1,0 +1,22 @@
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+
+        System.out.print("Unesite ocenu za uslugu restorana ITBootcamp (od 1 do 10): ");
+        int usluga = scan.nextInt();
+        System.out.print("Unesite ocenu za kvalitet restorana ITBootcamp (od 1 do 10): ");
+        int kvalitet = scan.nextInt();
+        double prosek = (usluga + kvalitet)/2.0;
+
+        if (usluga < 1 || usluga > 10 || kvalitet < 1 || kvalitet > 10) {
+            System.out.println("Podaci nisu validni.");
+            System.exit(1);
+        }
+        if (prosek > 5) {
+            System.out.println("Prosek je veci od 5.");
+        } else if (prosek <= 5 && kvalitet == 1) {
+            System.out.println("Treba popraviti kvalitet.");
+        } else if (prosek <= 5 && usluga == 1) {
+            System.out.println("Treba popraviti uslugu.");
+        } else System.out.println("Prosek je manji od 5.");
+
+    }

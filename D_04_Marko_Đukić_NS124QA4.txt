@@ -1,0 +1,40 @@
+Zadatak 12.
+
+SELECT jelo.naziv
+FROM jelo
+JOIN ponuda ON jelo.id_jelo = ponuda.id_jelo
+JOIN sadrzaj_narudzbine ON ponuda.id_ponude = sadrzaj_narudzbine.id_ponude
+WHERE sadrzaj_narudzbine.kolicina >= 2;
+
+
+Zadatak 11.
+
+SELECT naziv, recept FROM jelo
+JOIN ponuda ON jelo.id_jelo = ponuda.id_jelo
+WHERE dostupa_kolicina > 10;
+
+
+Zadatak 10.
+
+SELECT restoran_objekat.adresa, COUNT(jelo.id_jelo) AS brojJela
+FROM jelo
+JOIN ponuda ON jelo.id_jelo = ponuda.id_jelo
+JOIN restoran_objekat ON ponuda.id_restorana = restoran_objekat.id_restorana
+GROUP BY restoran_objekat.adresa;
+
+
+Zadatak 7.
+
+SELECT SUM(narudzbina.ukupna_cena), restoran_objekat.adresa
+FROM restoran_objekat
+JOIN narudzbina ON restoran_objekat.id_restorana = narudzbina.id_restorana
+GROUP BY restoran_objekat.adresa
+ORDER BY SUM(narudzbina.ukupna_cena) DESC;
+
+
+Zadatak 1.
+
+SELECT ukupna_cena, datum, id_korisnik
+FROM narudzbina
+JOIN ocene ON narudzbina.id_narudzbina = ocene.id_narudzbina
+WHERE kvalitet=5 AND cena=5 AND usluga=5 AND dostava=5;

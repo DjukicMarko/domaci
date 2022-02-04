@@ -1,0 +1,67 @@
+    public static void main(String[] args) {
+
+        Scanner s = new Scanner(System.in);
+        System.out.print("Izaberite znak (X/O): ");
+        String znak1 = s.nextLine().toUpperCase();
+        String znak2 = "";
+        if (znak1.equals("X")) {
+            znak2 = "O";
+        } else {
+            znak2 = "X";
+        }
+        String [] niz = new String[9];
+
+        for (int i = 0; i < niz.length; i++) {
+            if (i == 3) {
+                System.out.println();
+                System.out.print(niz[i] + " ");
+            } else if (i == 6) {
+                System.out.println();
+                System.out.print(niz[i] + " ");
+            } else {
+                System.out.print(niz[i] + " ");
+            }
+        }
+        for (int j = 0; j < niz.length; j++) {
+            System.out.println();
+            int mesto;
+            do {
+                System.out.print("Unesite broj mesta na koji zelite da postavite znak: ");
+                mesto = s.nextInt();
+            }
+            while (niz[mesto] != null);
+
+            niz[mesto] = znak1;
+            if (j == 4) {
+                for (int i = 0; i < niz.length; i++) {
+                    if (i == 3) {
+                        System.out.println();
+                        System.out.print(niz[i] + " ");
+                    } else if (i == 6) {
+                        System.out.println();
+                        System.out.print(niz[i] + " ");
+                    } else {
+                        System.out.print(niz[i] + " ");
+                    }
+                }
+                break;
+            }
+            int random;
+            do {
+                random = (int) Math.abs(Math.floor((Math.random()) * 10 - 1));
+            } while (niz[random] != null);
+            niz[random] = znak2;
+
+            for (int i = 0; i < niz.length; i++) {
+                if (i == 3) {
+                    System.out.println();
+                    System.out.print(niz[i] + " ");
+                } else if (i == 6) {
+                    System.out.println();
+                    System.out.print(niz[i] + " ");
+                } else {
+                    System.out.print(niz[i] + " ");
+                }
+            }
+        }
+    }

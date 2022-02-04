@@ -1,0 +1,29 @@
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+
+        System.out.print("Unesite mesec: ");
+        String mesec = scan.nextLine();
+
+        switch (mesec) {
+            case ("Februar"):
+                System.out.println("Mesec ima 28 dana.");
+                break;
+            case ("Januar"):
+            case ("Mart"):
+            case ("Maj"):
+            case ("Jul"):
+            case ("Avgust"):
+            case ("Oktobar"):
+            case ("Decembar"):
+                System.out.println("Mesec ima 31 dan.");
+                break;
+            case ("April"):
+            case ("Jun"):
+            case ("Septembar"):
+            case ("Novembar"):
+                System.out.println("Mesec ima 30 dana.");
+                break;
+            default:
+                System.out.println("Niste uneli mesec.");
+        }
+    }
