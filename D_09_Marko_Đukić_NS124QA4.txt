@@ -1,0 +1,71 @@
+public class Domaci1512 {
+    public static void main(String[] args) {
+
+        Scanner s = new Scanner(System.in);
+        System.out.print("Izaberite znak (X/O): ");
+        String mojKarakter = s.nextLine();
+        String kompKarakter = "";
+        kompKarakter = unosKaraktera(mojKarakter, kompKarakter);
+        System.out.print("Kompjuter bira: ");
+        System.out.println(unosKaraktera(mojKarakter, kompKarakter));
+
+        String [] niz = new String[9];
+
+        preskakanjeRedova(niz);
+
+        for (int j = 0; j < niz.length; j++) {
+            System.out.println();
+            int mesto;
+            do {
+                System.out.print("Unesite broj mesta na koji zelite da postavite znak: ");
+                mesto = s.nextInt();
+            }
+            while (niz[mesto] != null);
+
+            niz[mesto] = mojKarakter;
+            if (j == 4) {
+                preskakanjeRedova(niz);
+                break;
+            }
+            int random;
+            do {
+                random = (int) Math.abs(Math.floor((Math.random()) * 10 - 1));
+            } while (niz[random] != null);
+            niz[random] = kompKarakter;
+
+            preskakanjeRedova(niz);
+        }
+    }
+    public static String unosKaraktera(String karakter1,String karakter2){
+
+        if(karakter1.equals("X")){
+            karakter2 = "O";
+        }else if (karakter1.equals("O")){
+            karakter2 = "X";
+        }
+        return karakter2;
+    }
+    public static String [] preskakanjeRedova(String [] niz) {
+        for (int i = 0; i < niz.length; i++) {
+            if (i == 3) {
+                System.out.println();
+                System.out.print(niz[i] + " ");
+            } else if (i == 6) {
+                System.out.println();
+                System.out.print(niz[i] + " ");
+            } else {
+                System.out.print(niz[i] + " ");
+            }
+        }
+        return niz;
+    }
+    public static int randomMestoZaKomp(int random) {
+        int kompKarakter;
+        String [] niz;
+        do {
+            random = (int) Math.abs(Math.floor((Math.random()) * 10 - 1));
+        } while (niz[random] != null);
+        niz[random] = kompKarakter;
+        return random;
+    }
+}

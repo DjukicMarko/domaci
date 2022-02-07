@@ -1,0 +1,152 @@
+Izvini, domaci nisam uspeo da zavrsim do kraja.
+***********************************************
+
+package mojDomaci;
+
+public class Kafa {
+
+    private String naziv;
+    private int velicina;
+    private String[] sastojci;
+    private double cena;
+
+    public Kafa(String naziv, int velicina, String[] sastojci, double cena) {
+        this.naziv = naziv;
+        this.velicina = velicina;
+        this.sastojci = sastojci;
+        this.cena = cena;
+    }
+    public String getNaziv() {
+        return naziv;
+    }
+
+    public int getVelicina() {
+        return velicina;
+    }
+
+    public String[] getSastojci() {
+        return sastojci;
+    }
+
+    public double getCena() {
+        return cena;
+    }
+    public void setNaziv(String naziv) {
+        this.naziv = naziv;
+    }
+
+    public void setVelicina(int velicina) {
+        this.velicina = velicina;
+    }
+
+    public void setSastojci(String[] sastojci) {
+        this.sastojci = sastojci;
+    }
+
+    public void setCena(double cena) {
+        this.cena = cena;
+    }
+    public double obracunajPopust(int procenatPopusta) {
+        double popust = this.cena - (this.cena / procenatPopusta);
+        this.cena = this.cena - popust;
+        return popust;
+    }
+    public static void main(String[] args) {
+
+        Kafa kafa1 = new Kafa("NES", 200,new String[]{"NES", "mleko"},178.99);
+        Kafa kafa2 = new Kafa("Turska", 100,new String[]{"Voda", "kafa"}, 109.99);
+        Kafa kafa3 = new Kafa("Dzimoka", 100, new String[]{"Dzimoka", "mleko", "secer"}, 219.19);
+
+        Kafa[] kafeNiz = {kafa1, kafa2, kafa3};
+        Kafa[] kafeNiz2 = {kafa1, kafa2};
+
+        Prodavnica prodavnica1 = new Prodavnica(kafeNiz, "Lenjinova 2");
+        Prodavnica prodavnica2 = new Prodavnica(kafeNiz2, "Jevrejska 4");
+
+        System.out.println(Prodavnica.getBrojProdavnica());
+
+        prodavnica1.kupiKafu(kafa1,2);
+        prodavnica2.kupiKafu(kafa3,1);
+        prodavnica2.kupiKafu(kafa2,3);
+
+        System.out.println(prodavnica1.getBrojKupljenihProizvoda());
+        System.out.println(prodavnica2.getBrojKupljenihProizvoda());
+
+        System.out.println((Prodavnica.najuspesnijaProdavnica(new Prodavnica[] {prodavnica1, prodavnica2})));
+    }
+
+}
+
+*****************************************************************
+
+package mojDomaci;
+
+public class Prodavnica {
+
+    private Kafa[] kafa;
+    private String adresa;
+    private static int brojProdavnica;
+    private int brojKupljenihProizvoda;
+
+    public Prodavnica(Kafa[] kafa, String adresa) {
+        this.kafa = new Kafa[kafa.length];
+        this.adresa = adresa;
+        brojProdavnica++;
+    }
+
+    public Kafa[] getKafa() {
+        return kafa;
+    }
+
+    public String getAdresa() {
+        return adresa;
+    }
+
+    public static int getBrojProdavnica() {
+        return brojProdavnica;
+    }
+
+    public int getBrojKupljenihProizvoda() {
+        return brojKupljenihProizvoda;
+    }
+
+    public void setKafa(Kafa[] kafa) {
+        this.kafa = kafa;
+    }
+
+    public void setAdresa(String adresa) {
+        this.adresa = adresa;
+    }
+
+    public void setBrojProdavnica(int brojProdavnica) {
+        this.brojProdavnica = brojProdavnica;
+    }
+
+    public void setBrojKupljenihProizvoda(int brojKupljenihProizvoda) {
+        this.brojKupljenihProizvoda = brojKupljenihProizvoda;
+    }
+
+    public void kupiKafu(Kafa kafa, int kolicina) {
+        double racun = kafa.getCena() * kolicina;
+        brojKupljenihProizvoda += kolicina;
+        System.out.println("Vas racun iznosi: " + racun);
+    }
+
+    public void popust(int procenatPopusta) {
+        for (Kafa kafa : kafa) {
+            kafa.obracunajPopust(procenatPopusta);
+        }
+    }
+
+    public static String[] najuspesnijaProdavnica(Prodavnica[] prodavnica) {
+        int check = 0;
+        for (int i = 0; i < prodavnica.length; i++) {
+            if (prodavnica[i - 1].getBrojKupljenihProizvoda() <= prodavnica[i].getBrojKupljenihProizvoda()) {
+                check = i;
+            } else {
+                check = i - 1;
+            }
+        }
+        return ("Najuspešnija prodavnica je: " + prodavnica[check].getAdresa());// ne radi
+    }
+}

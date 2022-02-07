@@ -1,0 +1,35 @@
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.io.IOException;
+import java.time.Duration;
+
+public class Domaci1212022 {
+    public static void main(String[] args) throws IOException, InterruptedException {
+        System.setProperty("webdriver.chrome.driver",
+                PropReader.fetchProperty("WEBDRIVER.CHROME.PATH"));
+        WebDriver wd = new ChromeDriver();
+
+        wd.get("https://www.wikipedia.org/");
+        wd.manage().window().maximize();
+        wd.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+        WebElement clickLenguage = wd.findElement(By.xpath("//select[@id='searchLanguage']"));
+        clickLenguage.click();
+        WebElement language = wd.findElement(By.xpath("//option[contains(text(),'Српски / Srpski')]"));
+        language.click();
+        WebElement inputField = wd.findElement(By.xpath("//input[@id='searchInput']"));
+        inputField.sendKeys("Java");
+        WebElement javaProgramski = wd.findElement(By.xpath("/html[1]/body[1]/div[3]/form[1]/fieldset[1]/div[1]/div[2]/div[1]/a[2]/div[1]/h3[1]/em[1]"));
+        javaProgramski.click();
+        WebElement naslov = wd.findElement(By.cssSelector("#firstHeading"));
+        if (!naslov.getText().equals("Java (програмски језик)")) {
+            System.out.println("Naslov nije odgovarajuci.");
+        } else {
+            System.out.println("Naslov je odgovarajuci.");
+        }
+        wd.close();
+    }
+}

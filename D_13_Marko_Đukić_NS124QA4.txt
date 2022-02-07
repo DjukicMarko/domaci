@@ -1,0 +1,265 @@
+import java.time.LocalDate;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Kupovina(kreirajKorpu(), kreirajProizvode());
+    }
+
+    private static Korpa kreirajKorpu() {
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Unesite ime korisnika: ");
+        String ime = scanner.next();
+        System.out.print("Unesite prezime korisnika: ");
+        String prezime = scanner.next();
+        System.out.println();
+        return new Korpa(new Kupac(ime,prezime));
+    }
+    private static LinkedList<Proizvod> kreirajProizvode() {
+        System.out.println("Ukoliko želite da unesete proizvod iz klase Pice, morate izabrati ambalažu: kartonka, plastična,staklena ili limenka.");
+        Proizvod p1 = new Prehrambeni("475sdi7", "mleko", 100, LocalDate.of(2020, 12, 30));
+        Proizvod p2 = new Tehnika("345kh3", "sporet", 35000, 5, 40);
+        Proizvod p3 = new AlkoholnaPica("654k33", "pivo", 120, Ambalaza.staklena, 10);
+        Proizvod p4 = new Pice("774gg", "sok breskva", 200, Ambalaza.kartonska);
+
+        LinkedList<Proizvod> proizvodi = new LinkedList<>();
+        proizvodi.add(p1);
+        proizvodi.add(p2);
+        proizvodi.add(p3);
+        proizvodi.add(p4);
+        return proizvodi;
+    }
+    private static void Kupovina (Korpa korpa, List<Proizvod> proizvodi) {
+        Scanner s = new Scanner(System.in);
+        String unos = "";
+
+        while (!unos.equals("zavrsiKupovinu")) {
+            System.out.print("Unesite bar-kod proizvoda: ");
+            unos = s.next();
+            System.out.println();
+
+            boolean pExist = false;
+
+            for (Proizvod p : proizvodi) {
+                if(p.getBarKod().equals(unos)) {
+                    korpa.addProizvod(p);
+                    pExist = true;
+                    break;
+                }
+            }
+            if (pExist == true) {
+                System.out.println("Proizvod dodat u korpu.");
+            } else {
+                System.out.println("Proizvod ne postoji.");
+            }
+        }
+        korpa.istampajRacun();
+    }
+}
+
+*****************************************************************
+
+public abstract class Proizvod {
+    private String barKod;
+    private String naziv;
+    private double cena;
+
+    public Proizvod(String barKod, String naziv, double cena) {
+        this.barKod = barKod;
+        this.naziv = naziv;
+        this.cena = cena;
+    }
+
+    public String getBarKod() {
+        return barKod;
+    }
+
+    public void setBarKod(String barKod) {
+        this.barKod = barKod;
+    }
+
+    public String getNaziv() {
+        return naziv;
+    }
+
+    public void setNaziv(String naziv) {
+        this.naziv = naziv;
+    }
+
+    public double getCena() {
+        return cena;
+    }
+
+    public void setCena(double cena) {
+        this.cena = cena;
+    }
+
+    public void dodatniPopust(int popust) {
+        setCena(getCena() - (getCena() * popust / 100.0));
+    }
+
+    public abstract void poruci(int kolicina);
+
+    @Override
+    public String toString() {
+        return "Proizvod: " +
+                "naziv = " + naziv + '\'' +
+                ", cena = " + cena;
+    }
+}
+
+*****************************************************************
+
+public class Tehnika extends Proizvod {
+    private int garancija;
+    private double tezina;
+
+    public Tehnika(String barKod, String naziv, double cena, int garancija, double tezina) {
+        super(barKod, naziv, cena);
+        this.garancija = garancija;
+        this.tezina = tezina;
+    }
+    @Override
+    public void poruci(int kolicina) {
+        if (this.tezina > 30)
+            System.out.println("Dostava do vrata.");
+        System.out.println("Vaš račun je: " + getCena() * kolicina + " dinara.");
+    }
+}
+
+*****************************************************************
+
+import java.time.LocalDate;
+
+public class Prehrambeni extends Proizvod {
+    private LocalDate datumIsteka;
+
+    public Prehrambeni(String barKod, String naziv, double cena, LocalDate datumIsteka) {
+        super(barKod, naziv, cena);
+        this.datumIsteka = datumIsteka;
+    }
+    @Override
+    public void poruci(int kolicina) {
+        if (datumIsteka.isAfter(LocalDate.now()))
+            System.out.println("Datum je istekao.");
+        else System.out.println("Vaš račun je: " + getCena() * kolicina + " dinara.");
+    }
+}
+
+*****************************************************************
+
+enum Ambalaza {
+    kartonska,
+    plasticna,
+    staklena,
+    limenka
+}
+
+*****************************************************************
+
+public class AlkoholnaPica extends Pice {
+    private double procenatAlkohola;
+
+    public AlkoholnaPica(String barKod, String naziv, double cena, Ambalaza ambalaza, double procenatAlkohola) {
+        super(barKod, naziv, cena, ambalaza);
+        this.procenatAlkohola = procenatAlkohola;
+    }
+}
+
+*****************************************************************
+
+public class Pice extends Proizvod {
+    private Ambalaza ambalaza;
+
+    public Pice(String barKod, String naziv, double cena, Ambalaza ambalaza) {
+        super(barKod, naziv, cena);
+        this.ambalaza = ambalaza;
+    }
+    @Override
+    public void poruci (int kolicina) {
+        System.out.println("VaŠ račun je: " + (getCena() + cenaAmbalaze()) * kolicina + " dinara.");
+    }
+
+    public double cenaAmbalaze() {
+        double cenaAmbalaze = 0;
+        switch (ambalaza) {
+            case kartonska:
+                cenaAmbalaze = getCena() * 10 / 100.0;
+                break;
+            case plasticna:
+                cenaAmbalaze = getCena() * 20 / 100.0;
+                break;
+            case staklena:
+                cenaAmbalaze = getCena() * 30 / 100.0;
+                break;
+            case limenka:
+                cenaAmbalaze = getCena() * 30 / 100.0;
+                break;
+        }
+        return cenaAmbalaze;
+    }
+}
+
+*****************************************************************
+
+import java.util.HashMap;
+
+public class Korpa {
+
+    private Kupac kupac;
+    private HashMap<Proizvod, Integer> proizvodi;
+
+    public Korpa (Kupac kupac) {
+        proizvodi = new HashMap<>();
+        this.kupac = kupac;
+    }
+    public Kupac getKupac() {
+        return kupac;
+    }
+    public void setKupac() {
+        this.kupac = kupac;
+    }
+    public HashMap<Proizvod, Integer> getProizvodi() {
+        return proizvodi;
+    }
+    public void addProizvod(Proizvod proizvod) {
+        proizvodi.put(proizvod, proizvodi.getOrDefault(proizvod, 1) + 1);
+    }
+    public void istampajRacun() {
+        System.out.println("Naziv   |   Količina   |   Cena");
+        System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
+
+        for (Proizvod p : proizvodi.keySet()) {
+            String s = " ";
+            s += p.getNaziv() + "        " + proizvodi.get(p) + "        " + p.getCena() * proizvodi.get(p);
+            System.out.println(s);
+        }
+    }
+}
+
+*****************************************************************
+
+public class Kupac {
+    private String ime;
+    private String prezime;
+
+    public Kupac (String ime, String prezime) {
+        this.ime = ime;
+        this.prezime = prezime;
+    }
+    public String getIme(){
+        return ime;
+    }
+    public String getPrezime() {
+        return prezime;
+    }
+    public void setIme(String ime) {
+        this.ime = ime;
+    }
+    public void setPrezime(String prezime) {
+        this.prezime = prezime;
+    }
+}

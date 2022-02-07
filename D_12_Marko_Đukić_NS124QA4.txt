@@ -1,0 +1,160 @@
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Ukoliko zelite uneti proizvod iz klase Pice, morate izabrati ambalazu: kartonka, plasticna,staklena ili limenka");
+        Proizvod p1 = new Prehrambeni("475sdi7", "mleko", 100, LocalDate.of(2020, 12, 30));
+        Proizvod p2 = new Tehnika("345kh3", "sporet", 35000, 5, 40);
+        Proizvod p3 = new AlkoholnaPica("654k33", "pivo", 120, Ambalaza.staklena, 10);
+        Proizvod p4 = new Pice("774gg", "sok breskva", 200, Ambalaza.kartonska);
+        Proizvod[] proizvodi = {p1, p2, p3, p4};
+        for (Proizvod p : proizvodi) {
+            System.out.println(p);
+            if (p.getCena() > 200) p.dodatniPopust(15);
+            if (p instanceof AlkoholnaPica) p.dodatniPopust(50);
+            System.out.println(p);
+        }
+        System.out.println("-------------------------------------");
+        for (Proizvod p : proizvodi) {
+            System.out.println(p);
+            p.poruci(1);
+        }
+    }
+}
+
+****************************************************************
+
+
+public abstract class Proizvod {
+    private String barKod;
+    private String naziv;
+    private double cena;
+
+    public Proizvod(String barKod, String naziv, double cena) {
+        this.barKod = barKod;
+        this.naziv = naziv;
+        this.cena = cena;
+    }
+
+    public String getBarKod() {
+        return barKod;
+    }
+
+    public void setBarKod(String barKod) {
+        this.barKod = barKod;
+    }
+
+    public String getNaziv() {
+        return naziv;
+    }
+
+    public void setNaziv(String naziv) {
+        this.naziv = naziv;
+    }
+
+    public double getCena() {
+        return cena;
+    }
+
+    public void setCena(double cena) {
+        this.cena = cena;
+    }
+
+    public void dodatniPopust(int popust) {
+        setCena(getCena() - (getCena() * popust / 100.0));
+    }
+
+    public abstract void poruci(int kolicina);
+
+    @Override
+    public String toString() {
+        return "Proizvod: " +
+                "naziv='" + naziv + '\'' +
+                ", cena=" + cena;
+    }
+}
+
+****************************************************************
+
+public class Tehnika extends Proizvod {
+    private int garancija;
+    private double tezina;
+
+    public Tehnika(String barKod, String naziv, double cena, int garancija, double tezina) {
+        super(barKod, naziv, cena);
+        this.garancija = garancija;
+        this.tezina = tezina;
+    }
+    @Override
+    public void poruci(int kolicina) {
+        if (this.tezina > 30)
+            System.out.println("Dostava do vrata");
+        System.out.println("Vas racun je: " + getCena() * kolicina + " dinara.");
+    }
+}
+
+public class Prehrambeni extends Proizvod {
+    private LocalDate datumIsteka;
+
+    public Prehrambeni(String barKod, String naziv, double cena, LocalDate datumIsteka) {
+        super(barKod, naziv, cena);
+        this.datumIsteka = datumIsteka;
+    }
+    @Override
+    public void poruci(int kolicina) {
+        if (datumIsteka.isAfter(LocalDate.now()))
+            System.out.println("Datum je istekao!");
+        else System.out.println("Vas racun je: " + getCena() * kolicina + " dinara");
+    }
+}
+
+enum Ambalaza {
+    kartonska,
+    plasticna,
+    staklena,
+    limenka
+}
+
+****************************************************************
+
+public class AlkoholnaPica extends Pice {
+    private double procenatAlkohola;
+
+    public AlkoholnaPica(String barKod, String naziv, double cena, Ambalaza ambalaza, double procenatAlkohola) {
+        super(barKod, naziv, cena, ambalaza);
+        this.procenatAlkohola = procenatAlkohola;
+    }
+}
+
+
+****************************************************************
+
+public class Pice extends Proizvod {
+    private Ambalaza ambalaza;
+
+    public Pice(String barKod, String naziv, double cena, Ambalaza ambalaza) {
+        super(barKod, naziv, cena);
+        this.ambalaza = ambalaza;
+    }
+        @Override
+        public void poruci ( int kolicina){
+            System.out.println("Vas racun je: " + (getCena() + cenaAmbalaze()) * kolicina + " dinara");
+        }
+
+        public double cenaAmbalaze() {
+            double cenaAmbalaze = 0;
+            switch (ambalaza) {
+                case kartonska:
+                    cenaAmbalaze = getCena() * 10 / 100.0;
+                    break;
+                case plasticna:
+                    cenaAmbalaze = getCena() * 20 / 100.0;
+                    break;
+                case staklena:
+                    cenaAmbalaze = getCena() * 30 / 100.0;
+                    break;
+                case limenka:
+                    cenaAmbalaze = getCena() * 30 / 100.0;
+                    break;
+            }
+            return cenaAmbalaze;
+        }
+    }
